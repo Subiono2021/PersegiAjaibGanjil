@@ -589,7 +589,7 @@ style="
   <ul align="justify">
     <li>
       <strong>Pola Langkah Tidak Uniform:</strong> 
-      Tidak mengikuti skema tetap “satu langkah ke atas dan satu ke kanan”
+      Tidak mengikuti skema tetap "satu langkah ke atas dan satu ke kanan"
       sebagaimana pada metode Siamese klasik.
     </li>
     <li>
@@ -641,10 +641,10 @@ style="
     <li>
       <strong>Bukan Pandiagonal:</strong> 
       Tidak semua diagonal pecah (broken diagonals) memiliki jumlah 65.
-	  Sebab: $18+19+20+16+17=90\neq 65$.
+      Sebab: $18+19+20+16+17=90\neq 65$.
     </li>
     <li>
-      <strong>Makna “Non-Linear”:</strong> 
+      <strong>Makna "Non-Linear":</strong> 
       Istilah non-linear di sini merujuk pada 
       <em>metode konstruksi dan pola penempatan</em>,
       bukan pada sifat aljabar elemen matriksnya.
@@ -652,9 +652,9 @@ style="
   </ul>
       
       <p class="info-text" style="margin-top: 15px; font-style: italic; text-align:justify;">
-    “Persegi ini menunjukkan bahwa keteraturan numerik tidak harus muncul dari
+    "Persegi ini menunjukkan bahwa keteraturan numerik tidak harus muncul dari
     algoritma linear sederhana, melainkan dapat dibangun melalui simetri pusat
-    dan permutasi terstruktur yang lebih kaya.”
+    dan permutasi terstruktur yang lebih kaya."
   </p>
     </div>
     
@@ -664,7 +664,6 @@ style="
       <p class="info-text" id="selection-detail">Sel terpilih: 0</p>
       <div class="selection-controls">
         <button class="info" onclick="clearSelection()">Hapus Pilihan</button>
-        <button class="info" onclick="swapSelected()" id="swap-button" disabled>Lakukan Pertukaran</button>
         <button class="info" onclick="editSelectedCell()" id="edit-button" disabled>Edit Nilai Langsung</button>
         <button class="nonlinear-info" onclick="toggleNonlinearExplanation()" id="explanation-toggle">Tampilkan Penjelasan 5×5</button>
       </div>
@@ -1194,64 +1193,48 @@ function handleCellClick(row, col) {
   );
   
   if (index !== -1) {
+    // Jika sel sudah terpilih, hapus dari seleksi
     selectedCells.splice(index, 1);
+    renderGrid();
+    updateSelectionStatus();
   } else {
     if (selectedCells.length < 2) {
       selectedCells.push({ row, col });
+      
+      // Jika setelah menambahkan, kita memiliki 2 sel terpilih, lakukan pertukaran otomatis
+      if (selectedCells.length === 2) {
+        // Tunggu sebentar agar user bisa melihat sel mana yang dipilih
+        setTimeout(() => {
+          performSwap();
+        }, 300);
+      }
+      
+      renderGrid();
+      updateSelectionStatus();
     } else {
+      // Jika sudah ada 2 sel terpilih, ganti seleksi dengan menghapus yang pertama dan menambah yang baru
       selectedCells.shift();
       selectedCells.push({ row, col });
+      renderGrid();
+      updateSelectionStatus();
     }
   }
-  
-  renderGrid();
-  updateSelectionStatus();
 }
 
-function updateSelectionStatus() {
-  const selectionStatus = document.getElementById('selection-status');
-  const selectionDetail = document.getElementById('selection-detail');
-  const swapButton = document.getElementById('swap-button');
-  const editButton = document.getElementById('edit-button');
-  
-  if (selectedCells.length === 0) {
-    selectionStatus.textContent = 'Klik dua sel untuk menukar nilainya';
-    selectionDetail.textContent = 'Sel terpilih: 0';
-    swapButton.disabled = true;
-    editButton.disabled = true;
-  } else if (selectedCells.length === 1) {
-    const cell = selectedCells[0];
-    const value = current.square[cell.row][cell.col];
-    selectionStatus.textContent = 'Pilih sel kedua untuk ditukar';
-    selectionDetail.textContent = `Sel terpilih: 1 (${cell.row},${cell.col}) = ${value}`;
-    swapButton.disabled = true;
-    editButton.disabled = false;
-  } else {
-    const cell1 = selectedCells[0];
-    const cell2 = selectedCells[1];
-    const value1 = current.square[cell1.row][cell1.col];
-    const value2 = current.square[cell2.row][cell2.col];
-    
-    selectionStatus.textContent = 'Klik "Lakukan Pertukaran" untuk menukar nilai';
-    selectionDetail.textContent = `Sel terpilih: 2 (${cell1.row},${cell1.col}) = ${value1} ↔ (${cell2.row},${cell2.col}) = ${value2}`;
-    swapButton.disabled = false;
-    editButton.disabled = false;
-  }
-}
-
-function clearSelection() {
-  selectedCells = [];
-  renderGrid();
-}
-
-function swapSelected() {
+function performSwap() {
   if (selectedCells.length !== 2) {
-    alert('Pilih tepat dua sel untuk ditukar');
     return;
   }
   
   const [cell1, cell2] = selectedCells;
   
+  // Pastikan kedua sel berbeda
+  if (cell1.row === cell2.row && cell1.col === cell2.col) {
+    clearSelection();
+    return;
+  }
+  
+  // Lakukan pertukaran
   const temp = current.square[cell1.row][cell1.col];
   current.square[cell1.row][cell1.col] = current.square[cell2.row][cell2.col];
   current.square[cell2.row][cell2.col] = temp;
@@ -1268,16 +1251,50 @@ function swapSelected() {
   current.squareClass = 'Dimodifikasi Manual';
   current.parity = 'Tidak diketahui';
   
-  clearSelection();
-  
+  // Beri animasi pada grid
   const grid = document.getElementById('magic-grid');
   grid.classList.add('swap-animation');
   setTimeout(() => {
     grid.classList.remove('swap-animation');
   }, 500);
   
-  renderGrid();
+  // Kosongkan seleksi setelah pertukaran
+  clearSelection();
+  
+  // Update status
   updateStatus();
+}
+
+function updateSelectionStatus() {
+  const selectionStatus = document.getElementById('selection-status');
+  const selectionDetail = document.getElementById('selection-detail');
+  const editButton = document.getElementById('edit-button');
+  
+  if (selectedCells.length === 0) {
+    selectionStatus.textContent = 'Klik dua sel untuk menukar nilainya';
+    selectionDetail.textContent = 'Sel terpilih: 0';
+    editButton.disabled = true;
+  } else if (selectedCells.length === 1) {
+    const cell = selectedCells[0];
+    const value = current.square[cell.row][cell.col];
+    selectionStatus.textContent = 'Klik sel kedua untuk menukar nilai';
+    selectionDetail.textContent = `Sel terpilih: 1 (${cell.row},${cell.col}) = ${value}`;
+    editButton.disabled = false;
+  } else {
+    const cell1 = selectedCells[0];
+    const cell2 = selectedCells[1];
+    const value1 = current.square[cell1.row][cell1.col];
+    const value2 = current.square[cell2.row][cell2.col];
+    
+    selectionStatus.textContent = 'Menukar nilai secara otomatis...';
+    selectionDetail.textContent = `Menukar: (${cell1.row},${cell1.col}) = ${value1} ↔ (${cell2.row},${cell2.col}) = ${value2}`;
+    editButton.disabled = true;
+  }
+}
+
+function clearSelection() {
+  selectedCells = [];
+  renderGrid();
 }
 
 function editSelectedCell() {
