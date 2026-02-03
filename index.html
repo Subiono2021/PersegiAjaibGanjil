@@ -21,7 +21,7 @@ window.MathJax = {
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 <style>
-/* CSS tetap sama */
+/* CSS tetap sama - tambahan untuk panel informasi baru */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -285,6 +285,7 @@ button.nonlinear-info {
   display: flex;
   gap: 10px;
   margin-top: 10px;
+  flex-wrap: wrap;
 }
 
 .swap-animation {
@@ -312,7 +313,8 @@ button.nonlinear-info {
   margin-bottom: 8px;
 }
 
-.nonlinear-explanation {
+/* Panel Informasi Matematis - Baru */
+.math-info-panel {
   background: rgba(155, 89, 182, 0.1);
   border: 1px solid #9b59b6;
   border-radius: 8px;
@@ -321,37 +323,39 @@ button.nonlinear-info {
   font-size: 0.95rem;
   line-height: 1.6;
   display: none;
-  max-height: 400px;
+  max-height: 600px;
   overflow-y: auto;
 }
 
-.nonlinear-explanation h4 {
+.math-info-panel h4 {
   color: #9b59b6;
   margin-bottom: 15px;
   border-bottom: 2px solid #9b59b6;
   padding-bottom: 8px;
 }
 
-.nonlinear-explanation h5 {
+.math-info-panel h5 {
   color: #d7bde2;
   margin-top: 15px;
   margin-bottom: 8px;
 }
 
-.nonlinear-explanation p {
+.math-info-panel p {
   margin-bottom: 12px;
+  text-align: justify;
 }
 
-.nonlinear-explanation ul {
+.math-info-panel ul, .math-info-panel ol {
   margin-left: 20px;
   margin-bottom: 15px;
 }
 
-.nonlinear-explanation li {
+.math-info-panel li {
   margin-bottom: 6px;
+  text-align: justify;
 }
 
-.nonlinear-explanation .highlight {
+.math-info-panel .highlight {
   background: rgba(155, 89, 182, 0.2);
   padding: 10px;
   border-radius: 5px;
@@ -359,17 +363,68 @@ button.nonlinear-info {
   margin: 10px 0;
 }
 
-.toggle-button {
-  margin-top: 10px;
+.tab-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.tab-button {
   padding: 8px 15px;
   background: transparent;
   border: 1px solid #9b59b6;
   color: #d7bde2;
   font-size: 0.85rem;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.toggle-button:hover {
+.tab-button:hover {
   background: rgba(155, 89, 182, 0.2);
+}
+
+.tab-button.active {
+  background: #9b59b6;
+  color: white;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.example-grid {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 6px;
+  margin: 15px 0;
+  overflow-x: auto;
+}
+
+.example-grid table {
+  border-collapse: collapse;
+  margin: 10px auto;
+}
+
+.example-grid td {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  border: 1px solid #9b59b6;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.math-equation {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+  font-family: 'Courier New', monospace;
 }
 
 .properties-grid {
@@ -551,121 +606,390 @@ style="
       </div>
     </div>
     
-    <!-- Penjelasan Non-Linear 5x5 -->
-    <div class="nonlinear-explanation" id="nonlinear-explanation">
-      <h4>✨ Magic Square Non-Linear (Associative) $5\times 5$ ✨</h4>
-      
-      <div class="highlight">
-        <p align="justify">
-      <strong>Magic square non-linear $5\times5$</strong> ini merepresentasikan 
-      <em>persegi ajaib asosiatif</em> yang <b>tidak dihasilkan secara langsung</b> 
-      oleh algoritma linear-modular klasik (misalnya metode Siamese), 
-      namun tetap mempertahankan keseimbangan matematis sempurna 
-      melalui struktur simetri pusat yang kuat.
-    </p>
+    <!-- Panel Informasi Matematis Lengkap -->
+    <div class="math-info-panel" id="math-info-panel">
+      <div class="tab-buttons">
+        <button class="tab-button active" onclick="showTab('tab-order3')">Orde 3</button>
+        <button class="tab-button" onclick="showTab('tab-order5')">Orde 5</button>
+        <button class="tab-button" onclick="showTab('tab-pandiagonal')">Pan-Diagonal</button>
+        <button class="tab-button" onclick="showTab('tab-metode')">Metode Konstruksi</button>
       </div>
       
-      <h5>🔗 Karakteristik Utama Orde 5</h5>
-      <p align="justify">Persegi ini memenuhi seluruh syarat formal sebuah <i>magic square</i>:</p>
-  <ul align="justify">
-    <li>
-      <strong>Jumlah Ajaib (Magic Sum):</strong> 
-      Jumlah setiap baris, kolom, dan diagonal utama bernilai tetap
-      \[
-        M = \frac{5(5^2+1)}{2} = 65.
-      \]
-    </li>
-    <li>
-      <strong>Rentang Angka:</strong> 
-      Menggunakan tepat himpunan $\{1,2,\dots,25\}$ tanpa pengulangan.
-    </li>
-  </ul>
+      <!-- Tab Orde 3 -->
+      <div id="tab-order3" class="tab-content active">
+        <h4>✨ Magic Square Orde 3: Teori dan Konstruksi ✨</h4>
+        
+        <div class="highlight">
+          <p>
+            Persegi ajaib orde 3 adalah persegi ajaib terkecil non-trivial yang mungkin, 
+            terdiri dari angka 1 sampai 9 sedemikian sehingga jumlah setiap baris, kolom, 
+            dan diagonal utama sama dengan 15.
+          </p>
+        </div>
+        
+        <h5>🎯 Rumus Umum Konstruksi</h5>
+        <p>
+          Untuk orde ganjil $n$, persegi ajaib dapat dibangun dengan rumus linear-modular:
+          $$m_{ij} \equiv a \cdot i + b \cdot j + c \pmod{n}$$
+          dengan $i, j = 0, 1, \dots, n-1$.
+        </p>
+        
+        <h5>🔧 Contoh Konkret Orde 3</h5>
+        <p>
+          Untuk $n=3$, dengan memilih $a=2$, $b=1$, $c=0$, kita peroleh:
+          $$m_{ij} \equiv 2i + j \pmod{3}$$
+        </p>
+        
+        <div class="example-grid">
+          <p><strong>Proses Konstruksi:</strong></p>
+          <ol>
+            <li>Hitung residu modulo 3: $r_{ij} = (2i + j) \mod 3$</li>
+            <li>Mapping residu ke angka 1-9: $m_{ij} = 3 \times r_{ij} + k_{ij}$</li>
+            <li>Dengan pengaturan yang tepat, diperoleh persegi ajaib klasik</li>
+          </ol>
+          
+          <table>
+            <tr>
+              <td>8</td><td>1</td><td>6</td>
+            </tr>
+            <tr>
+              <td>3</td><td>5</td><td>7</td>
+            </tr>
+            <tr>
+              <td>4</td><td>9</td><td>2</td>
+            </tr>
+          </table>
+          <p><em>Persegi ajaib Lo Shu klasik</em></p>
+        </div>
+        
+        <h5>📊 Verifikasi Matematis</h5>
+        <div class="properties-grid">
+          <div class="property-item">
+            <div class="property-title">Jumlah Ajaib</div>
+            $$M = \frac{n(n^2+1)}{2} = \frac{3(9+1)}{2} = 15$$
+          </div>
+          <div class="property-item">
+            <div class="property-title">Jumlah Kombinasi</div>
+            Hanya ada 8 variasi unik (rotasi dan refleksi dari satu bentuk dasar)
+          </div>
+          <div class="property-item">
+            <div class="property-title">Simetri Pusat</div>
+            $$a_{ij} + a_{2-i,2-j} = 10$$
+            Contoh: 8+2=10, 3+7=10, 4+6=10
+          </div>
+          <div class="property-item">
+            <div class="property-title">Angka Tengah</div>
+            Selalu 5 untuk persegi ajaib normal orde 3
+            $$a_{11} = \frac{n^2+1}{2} = 5$$
+          </div>
+        </div>
+        
+        <h5>⚙️ Struktur Grup</h5>
+        <p>
+          Grup simetri persegi 3×3 adalah $D_4$ (dihedral orde 8) yang terdiri dari:
+        </p>
+        <ul>
+          <li>4 rotasi: 0°, 90°, 180°, 270°</li>
+          <li>4 refleksi: horizontal, vertikal, dua diagonal</li>
+          <li>Setiap aksi $D_4$ mempertahankan sifat "keajaiban"</li>
+        </ul>
+      </div>
       
-      <h5>⚡ Hubungan dengan Metode Siamese (De la Loubère)</h5>
-  <p align="justify">
-    Meskipun tetap valid sebagai persegi ajaib orde ganjil, 
-    konstruksi ini <b>bukan hasil langsung</b> dari algoritma Siamese standar:
-  </p>
-  <ul align="justify">
-    <li>
-      <strong>Pola Langkah Tidak Uniform:</strong> 
-      Tidak mengikuti skema tetap "satu langkah ke atas dan satu ke kanan"
-      sebagaimana pada metode Siamese klasik.
-    </li>
-    <li>
-      <strong>Posisi Angka $1$:</strong> 
-      Angka $1$ terletak pada sel $(4,2)$, berbeda dari posisi khas Siamese
-      yang berada di tengah baris teratas.
-    </li>
-    <li>
-      <strong>Konstruksi Alternatif:</strong> 
-      Pola seperti ini dapat diperoleh melalui 
-      transformasi simetri, permutasi grup, atau teknik eksploratif
-      seperti <i>backtracking</i>, bukan sekadar pengulangan langkah linear.
-    </li>
-  </ul>
+      <!-- Tab Orde 5 -->
+      <div id="tab-order5" class="tab-content">
+        <h4>✨ Magic Square Orde 5: Kompleksitas dan Variasi ✨</h4>
+        
+        <div class="highlight">
+          <p>
+            Persegi ajaib orde 5 menawarkan keragaman yang jauh lebih besar daripada orde 3,
+            dengan 275,305,224 bentuk berbeda yang mungkin (menurut hasil komputer).
+          </p>
+        </div>
+        
+        <h5>🎯 Rumus dan Parameter</h5>
+        <p>
+          Untuk orde 5, rumus linear-modular tetap berlaku:
+          $$m_{ij} \equiv a \cdot i + b \cdot j + c \pmod{5}$$
+          dengan syarat $\gcd(a,5) = \gcd(b,5) = 1$.
+        </p>
+        
+        <h5>🔧 Contoh Linear-Modular</h5>
+        <p>
+          Dengan $a=1$, $b=2$, $c=1$, diperoleh:
+          $$m_{ij} \equiv i + 2j + 1 \pmod{5}$$
+        </p>
+        
+        <div class="example-grid">
+          <table>
+            <tr>
+              <td>17</td><td>24</td><td>1</td><td>8</td><td>15</td>
+            </tr>
+            <tr>
+              <td>23</td><td>5</td><td>7</td><td>14</td><td>16</td>
+            </tr>
+            <tr>
+              <td>4</td><td>6</td><td>13</td><td>20</td><td>22</td>
+            </tr>
+            <tr>
+              <td>10</td><td>12</td><td>19</td><td>21</td><td>3</td>
+            </tr>
+            <tr>
+              <td>11</td><td>18</td><td>25</td><td>2</td><td>9</td>
+            </tr>
+          </table>
+          <p><em>Persegi ajaib Dürer (variasi dari metode Siamese)</em></p>
+        </div>
+        
+        <h5>📊 Sifat Matematis Orde 5</h5>
+        <div class="properties-grid">
+          <div class="property-item">
+            <div class="property-title">Jumlah Ajaib</div>
+            $$M = \frac{5(25+1)}{2} = 65$$
+          </div>
+          <div class="property-item">
+            <div class="property-title">Angka Tengah</div>
+            $$a_{22} = \frac{25+1}{2} = 13$$
+          </div>
+          <div class="property-item">
+            <div class="property-title">Simetri Pusat</div>
+            $$a_{ij} + a_{4-i,4-j} = 26 = n^2 + 1$$
+          </div>
+          <div class="property-item">
+            <div class="property-title">Kuadran Simetris</div>
+            Setiap kuadran berjumlah 65
+          </div>
+        </div>
+        
+        <h5>🔢 Klasifikasi Orde 5</h5>
+        <ol>
+          <li><strong>Associative</strong>: Memiliki simetri pusat sempurna</li>
+          <li><strong>Pandiagonal</strong>: Semua diagonal (termasuk terputus) berjumlah 65</li>
+          <li><strong>Most-perfect</strong>: Gabungan associative dan pandiagonal</li>
+          <li><strong>Composite</strong>: Dapat dipecah menjadi sub-persegi</li>
+        </ol>
+        
+        <h5>⚙️ Grup Simetri Orde 5</h5>
+        <p>
+          Grup simetri $D_4$ tetap berlaku, tetapi dengan kompleksitas lebih tinggi.
+          Aksi grup $A_n$ (permutasi genap) dapat menghasilkan variasi baru tanpa
+          mengubah sifat dasar persegi ajaib.
+        </p>
+      </div>
       
-      <h5>🎯 Properti Asosiatif (Simetri Pusat)</h5>
-  <p align="justify">
-    Ciri struktural terpenting dari persegi ini adalah 
-    <strong>simetri pusat (associativity)</strong>:
-  </p>
-  <ul align="justify">
-    <li>
-      <strong>Pasangan Komplementer:</strong> 
-      Untuk setiap sel $(i,j)$ berlaku
-      \[
-        a_{i,j} + a_{4-i,\,4-j} = 26 = 5^2 + 1.
-      \]
-    </li>
-    <li>
-      <strong>Contoh:</strong><br>
-      $11 + 15 = 26$, <br>
-      $17 + 9 = 26$, <br>
-      $25 + 1 = 26$.
-    </li>
-    <li>
-      <strong>Pusat Invarian:</strong> 
-      Elemen tengah $13$ pada posisi $(2,2)$ berfungsi sebagai poros simetri
-      seluruh matriks.
-    </li>
-  </ul>
+      <!-- Tab Pan-Diagonal -->
+      <div id="tab-pandiagonal" class="tab-content">
+        <h4>✨ Pan-Diagonal Magic Square: Keajaiban Diagonal ✨</h4>
+        
+        <div class="highlight">
+          <p>
+            Persegi ajaib pan-diagonal (atau <em>diabolik</em>) adalah persegi ajaib
+            di mana <strong>semua diagonal terputus (broken diagonals)</strong> juga
+            memiliki jumlah ajaib yang sama.
+          </p>
+        </div>
+        
+        <h5>🎯 Definisi Formal</h5>
+        <p>
+          Untuk persegi $n \times n$ dengan entri $a_{ij}$ ($i,j = 0,\dots,n-1$),
+          disebut pan-diagonal jika untuk semua $k = 0,\dots,n-1$:
+        </p>
+        <div class="math-equation">
+          <p>1. Diagonal utama terputus:</p>
+          $$\sum_{i=0}^{n-1} a_{i, (i+k) \bmod n} = M$$
+          
+          <p>2. Diagonal sekunder terputus:</p>
+          $$\sum_{i=0}^{n-1} a_{i, (k-i) \bmod n} = M$$
+        </div>
+        
+        <h5>🔧 Syarat Eksistensi</h5>
+        <ul>
+          <li>Orde 3: <strong>Tidak mungkin</strong> ada persegi ajaib pan-diagonal</li>
+          <li>Orde 4: Mungkin, contoh klasik dari Dürer</li>
+          <li>Orde 5: Banyak kemungkinan, termasuk konstruksi linear-modular tertentu</li>
+          <li>Orde $n$: Hanya mungkin untuk $n$ yang tidak habis dibagi 2 atau 3</li>
+        </ul>
+        
+        <h5>📐 Contoh Pan-Diagonal Orde 4</h5>
+        <div class="example-grid">
+          <table>
+            <tr>
+              <td>1</td><td>14</td><td>4</td><td>15</td>
+            </tr>
+            <tr>
+              <td>8</td><td>11</td><td>5</td><td>10</td>
+            </tr>
+            <tr>
+              <td>13</td><td>2</td><td>16</td><td>3</td>
+            </tr>
+            <tr>
+              <td>12</td><td>7</td><td>9</td><td>6</td>
+            </tr>
+          </table>
+          <p><em>Jumlah ajaib = 34. Semua 10 diagonal berjumlah 34.</em></p>
+        </div>
+        
+        <h5>🔍 Verifikasi Pan-Diagonal</h5>
+        <p>
+          Untuk contoh di atas, beberapa diagonal terputus:
+        </p>
+        <ul>
+          <li>Diagonal 1: 1+11+16+6 = 34</li>
+          <li>Diagonal 2: 14+5+3+12 = 34</li>
+          <li>Diagonal 3: 4+10+13+7 = 34</li>
+          <li>Diagonal 4: 15+8+2+9 = 34</li>
+        </ul>
+        
+        <h5>⚙️ Konstruksi Pan-Diagonal</h5>
+        <p>
+          Metode konstruksi pan-diagonal:
+        </p>
+        <ol>
+          <li><strong>Metode Siamese ganda</strong>: Mulai dari dua posisi berbeda</li>
+          <li><strong>Metode modular khusus</strong>: Dengan pemilihan parameter $a,b,c$ tertentu</li>
+          <li><strong>Transformasi grup</strong>: Dari pan-diagonal dasar dengan aksi $D_4 \rtimes A_n$</li>
+        </ol>
+        
+        <h5>📊 Properti Tambahan</h5>
+        <div class="properties-grid">
+          <div class="property-item">
+            <div class="property-title">Most-perfect</div>
+            Persegi pan-diagonal 4n×4n dengan properti tambahan:
+            setiap sub-persegi 2×2 berjumlah $2M/n$
+          </div>
+          <div class="property-item">
+            <div class="property-title">Simetri Ganda</div>
+            Umumnya juga associative:
+            $$a_{ij} + a_{n-1-i,n-1-j} = n^2+1$$
+          </div>
+          <div class="property-item">
+            <div class="property-title">Jumlah Diagonal</div>
+            Total $2n$ diagonal (n utama + n sekunder) semuanya berjumlah $M$
+          </div>
+          <div class="property-item">
+            <div class="property-title">Orde Minimal</div>
+            Orde 4 adalah yang terkecil yang mungkin untuk pan-diagonal
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tab Metode Konstruksi -->
+      <div id="tab-metode" class="tab-content">
+        <h4>✨ Metode Konstruksi Magic Square ✨</h4>
+        
+        <div class="highlight">
+          <p>
+            Berbagai metode telah dikembangkan selama berabad-abad untuk membangun
+            persegi ajaib, dari algoritma sederhana hingga teknik matematika kompleks.
+          </p>
+        </div>
+        
+        <h5>🎯 Metode Siamese (De la Loubère)</h5>
+        <p>
+          Untuk orde ganjil $n$:
+        </p>
+        <ol>
+          <li>Letakkan 1 di tengah baris teratas</li>
+          <li>Bergeser ke atas-kanan untuk angka berikutnya</li>
+          <li>Jika keluar batas, "melipat" ke sisi berlawanan</li>
+          <li>Jika sel terisi, turun satu sel dari posisi sebelumnya</li>
+        </ol>
+        
+        <div class="math-equation">
+          <p><strong>Algoritma formal:</strong></p>
+          <pre>
+Input: n ganjil
+Output: Persegi ajaib n×n
 
-      <h5>🔍 Klasifikasi dan Signifikansi Matematis</h5>
-  <ul align="justify">
-    <li>
-      <strong>Associative Magic Square:</strong> 
-      Persegi ini termasuk kelas <i>associative (regular) magic squares</i>
-      sebagaimana diklasifikasikan dalam literatur klasik (mis. Andrews).
-    </li>
-    <li>
-      <strong>Bukan Pandiagonal:</strong> 
-      Tidak semua diagonal pecah (broken diagonals) memiliki jumlah 65.
-      Sebab: $18+19+20+16+17=90\neq 65$.
-    </li>
-    <li>
-      <strong>Makna "Non-Linear":</strong> 
-      Istilah non-linear di sini merujuk pada 
-      <em>metode konstruksi dan pola penempatan</em>,
-      bukan pada sifat aljabar elemen matriksnya.
-    </li>
-  </ul>
-      
-      <p class="info-text" style="margin-top: 15px; font-style: italic; text-align:justify;">
-    "Persegi ini menunjukkan bahwa keteraturan numerik tidak harus muncul dari
-    algoritma linear sederhana, melainkan dapat dibangun melalui simetri pusat
-    dan permutasi terstruktur yang lebih kaya."
-  </p>
+1. i = 0, j = (n-1)/2
+2. For k = 1 to n²:
+   a. A[i][j] = k
+   b. new_i = (i-1) mod n
+   c. new_j = (j+1) mod n
+   d. If A[new_i][new_j] terisi:
+        i = (i+1) mod n
+      Else:
+        i = new_i, j = new_j
+          </pre>
+        </div>
+        
+        <h5>🔢 Metode Linear-Modular</h5>
+        <p>
+          Untuk $n$ ganjil, pilih $a,b$ dengan $\gcd(a,n)=\gcd(b,n)=1$:
+          $$m_{ij} \equiv a \cdot i + b \cdot j + c \pmod{n}$$
+          Kemudian mapping ke angka 1 sampai $n^2$.
+        </p>
+        
+        <h5>⚙️ Metode Grup dan Permutasi</h5>
+        <p>
+          Menggunakan aksi grup $D_4 \rtimes A_n$:
+        </p>
+        <ul>
+          <li><strong>$D_4$</strong>: Rotasi dan refleksi geometri</li>
+          <li><strong>$A_n$</strong>: Permutasi genap pada indeks atau nilai</li>
+          <li><strong>Produk semi-langsung</strong>: Kombinasi aksi geometri dan permutasi</li>
+        </ul>
+        
+        <h5>🔍 Metode Backtracking</h5>
+        <p>
+          Untuk orde besar atau properti khusus:
+        </p>
+        <ol>
+          <li>Isi sel secara rekursif</li>
+          <li>Verifikasi kondisi di setiap langkah</li>
+          <li>Backtrack jika tidak mungkin</li>
+          <li>Optimasi dengan heuristik dan constraint programming</li>
+        </ol>
+        
+        <h5>📐 Metode Komposisi</h5>
+        <p>
+          Untuk orde komposit $n = p \times q$:
+        </p>
+        <ul>
+          <li>Buat persegi ajaib orde $p$ (template)</li>
+          <li>Buat persegi ajaib orde $q$ (pengisi)</li>
+          <li>Substitusi setiap sel template dengan pengisi yang ditransformasi</li>
+          <li>Hasilnya adalah persegi ajaib orde $n$</li>
+        </ul>
+        
+        <h5>📊 Perbandingan Metode</h5>
+        <div class="properties-grid">
+          <div class="property-item">
+            <div class="property-title">Siamese</div>
+            Cepat, sederhana, hanya untuk orde ganjil, menghasilkan satu bentuk dasar
+          </div>
+          <div class="property-item">
+            <div class="property-title">Linear-Modular</div>
+            Matematis elegan, semua orde ganjil, parameter menentukan variasi
+          </div>
+          <div class="property-item">
+            <div class="property-title">Grup Theory</div>
+            Kuat teoritis, menghasilkan semua variasi dari satu bentuk, kompleks
+          </div>
+          <div class="property-item">
+            <div class="property-title">Backtracking</div>
+            Fleksibel, semua orde dan properti, lambat untuk orde besar
+          </div>
+        </div>
+        
+        <h5>🔗 Referensi Sejarah</h5>
+        <ul>
+          <li><strong>Abad ke-9 SM</strong>: Lo Shu, Cina (orde 3)</li>
+          <li><strong>1514</strong>: Melencolia I, Albrecht Dürer (orde 4)</li>
+          <li><strong>1693</strong>: Métode de la Loubère</li>
+          <li><strong>19th century</strong>: Pengembangan teori grup oleh Cayley, Sylvester</li>
+          <li><strong>20th century</strong>: Klasifikasi lengkap hingga orde 5</li>
+        </ul>
+      </div>
     </div>
     
     <div class="selection-info" id="selection-info">
-      <h4>Editor Manual</h4>
+      <h4>Editor Manual & Informasi</h4>
       <p id="selection-status">Klik dua sel untuk menukar nilainya</p>
       <p class="info-text" id="selection-detail">Sel terpilih: 0</p>
       <div class="selection-controls">
         <button class="info" onclick="clearSelection()">Hapus Pilihan</button>
         <button class="info" onclick="editSelectedCell()" id="edit-button" disabled>Edit Nilai Langsung</button>
-        <button class="nonlinear-info" onclick="toggleNonlinearExplanation()" id="explanation-toggle">Tampilkan Penjelasan 5×5</button>
+        <button class="nonlinear-info" onclick="toggleMathInfoPanel()" id="math-info-toggle">📚 Tampilkan Informasi Matematis</button>
       </div>
     </div>
     
@@ -963,8 +1287,8 @@ let current = {
 // ===== STATE UNTUK SELEKSI SEL =====
 let selectedCells = [];
 
-// ===== VARIABEL UNTUK PENJELASAN NON-LINEAR =====
-let nonlinearExplanationVisible = false;
+// ===== VARIABEL UNTUK PANEL INFORMASI =====
+let mathInfoVisible = false;
 
 // ===== FUNGSI UTAMA =====
 function init() {
@@ -1012,41 +1336,22 @@ function togglePermutationControls() {
   const order5Section = document.getElementById('order5-permutations');
   const order3Info = document.getElementById('order3-cycle-info');
   const order5Info = document.getElementById('permutation-info');
-  const explanationToggle = document.getElementById('explanation-toggle');
-  const nonlinearExplanation = document.getElementById('nonlinear-explanation');
   
   if (current.order === 3) {
     order3Section.style.display = 'block';
     order5Section.style.display = 'none';
     order3Info.style.display = 'block';
     order5Info.style.display = 'none';
-    explanationToggle.style.display = 'none';
-    nonlinearExplanation.style.display = 'none';
-    nonlinearExplanationVisible = false;
   } else if (current.order === 5) {
     order3Section.style.display = 'none';
     order5Section.style.display = 'block';
     order3Info.style.display = 'none';
     order5Info.style.display = 'block';
-    
-    if (current.mode === 'nonlinear') {
-      explanationToggle.style.display = 'inline-block';
-      explanationToggle.textContent = 'Tampilkan Penjelasan 5×5';
-      nonlinearExplanation.style.display = 'none';
-      nonlinearExplanationVisible = false;
-    } else {
-      explanationToggle.style.display = 'none';
-      nonlinearExplanation.style.display = 'none';
-      nonlinearExplanationVisible = false;
-    }
   } else {
     order3Section.style.display = 'none';
     order5Section.style.display = 'none';
     order3Info.style.display = 'none';
     order5Info.style.display = 'none';
-    explanationToggle.style.display = 'none';
-    nonlinearExplanation.style.display = 'none';
-    nonlinearExplanationVisible = false;
   }
   
   // Update info paritas
@@ -1075,26 +1380,85 @@ function resetToExample() {
   loadExample(current.currentExampleKey);
 }
 
-function toggleNonlinearExplanation() {
-  const explanationBox = document.getElementById('nonlinear-explanation');
-  const toggleButton = document.getElementById('explanation-toggle');
+// ===== FUNGSI UNTUK PANEL INFORMASI MATEMATIS =====
+function toggleMathInfoPanel() {
+  const panel = document.getElementById('math-info-panel');
+  const toggleButton = document.getElementById('math-info-toggle');
   
-  if (!explanationBox) {
-    console.error('Elemen nonlinear-explanation tidak ditemukan');
+  if (!panel) {
+    console.error('Elemen math-info-panel tidak ditemukan');
     return;
   }
   
-  nonlinearExplanationVisible = !nonlinearExplanationVisible;
+  mathInfoVisible = !mathInfoVisible;
   
-  if (nonlinearExplanationVisible) {
-    explanationBox.style.display = 'block';
-    toggleButton.textContent = 'Sembunyikan Penjelasan 5×5';
+  if (mathInfoVisible) {
+    panel.style.display = 'block';
+    toggleButton.textContent = '✕ Tutup Informasi Matematis';
+    toggleButton.style.background = '#e74c3c';
+    toggleButton.style.borderColor = '#c0392b';
     
-    // Scroll ke penjelasan jika perlu
-    explanationBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    // Set tab aktif berdasarkan order saat ini
+    if (current.order === 3) {
+      showTab('tab-order3');
+    } else if (current.order === 5) {
+      showTab('tab-order5');
+    }
+    
+    // Scroll ke panel
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    
+    // Render ulang MathJax
+    if (window.MathJax) {
+      MathJax.typesetPromise();
+    }
   } else {
-    explanationBox.style.display = 'none';
-    toggleButton.textContent = 'Tampilkan Penjelasan 5×5';
+    panel.style.display = 'none';
+    toggleButton.textContent = '📚 Tampilkan Informasi Matematis';
+    toggleButton.style.background = '';
+    toggleButton.style.borderColor = '';
+  }
+}
+
+function showTab(tabId) {
+  // Sembunyikan semua tab
+  const tabs = document.querySelectorAll('.tab-content');
+  tabs.forEach(tab => {
+    tab.classList.remove('active');
+  });
+  
+  // Nonaktifkan semua tombol tab
+  const tabButtons = document.querySelectorAll('.tab-button');
+  tabButtons.forEach(button => {
+    button.classList.remove('active');
+  });
+  
+  // Tampilkan tab yang dipilih
+  const activeTab = document.getElementById(tabId);
+  if (activeTab) {
+    activeTab.classList.add('active');
+  }
+  
+  // Aktifkan tombol tab yang sesuai
+  const activeButton = Array.from(tabButtons).find(button => 
+    button.textContent.includes(tabId.replace('tab-', '').replace('order3', 'Orde 3').replace('order5', 'Orde 5').replace('pandiagonal', 'Pan-Diagonal').replace('metode', 'Metode'))
+  );
+  if (activeButton) {
+    activeButton.classList.add('active');
+  } else {
+    // Fallback: aktifkan tombol pertama yang sesuai dengan tabId
+    const tabName = tabId.replace('tab-', '');
+    const matchingButton = Array.from(tabButtons).find(button => 
+      button.textContent.toLowerCase().includes(tabName.toLowerCase())
+    );
+    if (matchingButton) {
+      matchingButton.classList.add('active');
+    }
+  }
+  
+  // Render ulang MathJax untuk tab baru
+  if (window.MathJax) {
+    MathJax.typesetPromise();
   }
 }
 
@@ -1331,7 +1695,8 @@ function editSelectedCell() {
   }
 }
 
-// ===== FUNGSI PERMUTASI ORDE 3 =====
+// ===== FUNGSI PERMUTASI =====
+// (Fungsi-fungsi permutasi tetap sama seperti sebelumnya)
 function applyPermutationA() {
   applyPermutationToSquare(PERMUTATIONS_3.a);
   current.mode = 'permuted';
@@ -1435,7 +1800,6 @@ function resetToNormalAndApplyAB() {
   applyPermutationAB();
 }
 
-// ===== FUNGSI PERMUTASI ORDE 5 =====
 function applyPermutationX() {
   applyPermutationToSquare(PERMUTATIONS_5.x);
   current.mode = 'permuted';
@@ -1506,7 +1870,6 @@ function resetToNormalAndApplyXY() {
   applyPermutationXY();
 }
 
-// ===== FUNGSI BANTU PERMUTASI =====
 function applyPermutationToSquare(mapping) {
   const n = current.order;
   for (let i = 0; i < n; i++) {
