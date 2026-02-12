@@ -619,81 +619,106 @@ style="
       <div id="tab-order3" class="tab-content active">
         <h4>✨ Magic Square Orde 3: Teori dan Konstruksi ✨</h4>
         
-        <div class="highlight">
-          <p>
-            Persegi ajaib orde 3 adalah persegi ajaib terkecil non-trivial yang mungkin, 
-            terdiri dari angka 1 sampai 9 sedemikian sehingga jumlah setiap baris, kolom, 
-            dan diagonal utama sama dengan 15.
-          </p>
-        </div>
-        
-        <h5>🎯 Rumus Umum Konstruksi</h5>
-        <p>
-          Untuk orde ganjil $n$, persegi ajaib dapat dibangun dengan rumus linear-modular:
-          $$m_{ij} \equiv a \cdot i + b \cdot j + c \pmod{n}$$
-          dengan $i, j = 0, 1, \dots, n-1$.
-        </p>
-        
-        <h5>🔧 Contoh Konkret Orde 3</h5>
-        <p>
-          Untuk $n=3$, dengan memilih $a=2$, $b=1$, $c=0$, kita peroleh:
-          $$m_{ij} \equiv 2i + j \pmod{3}$$
-        </p>
-        
-        <div class="example-grid">
-          <p><strong>Proses Konstruksi:</strong></p>
-          <ol>
-            <li>Hitung residu modulo 3: $r_{ij} = (2i + j) \mod 3$</li>
-            <li>Mapping residu ke angka 1-9: $m_{ij} = 3 \times r_{ij} + k_{ij}$</li>
-            <li>Dengan pengaturan yang tepat, diperoleh persegi ajaib klasik</li>
-          </ol>
-          
-          <table>
-            <tr>
-              <td>8</td><td>1</td><td>6</td>
-            </tr>
-            <tr>
-              <td>3</td><td>5</td><td>7</td>
-            </tr>
-            <tr>
-              <td>4</td><td>9</td><td>2</td>
-            </tr>
-          </table>
-          <p><em>Persegi ajaib Lo Shu klasik</em></p>
-        </div>
-        
-        <h5>📊 Verifikasi Matematis</h5>
-        <div class="properties-grid">
-          <div class="property-item">
-            <div class="property-title">Jumlah Ajaib</div>
-            $$M = \frac{n(n^2+1)}{2} = \frac{3(9+1)}{2} = 15$$
-          </div>
-          <div class="property-item">
-            <div class="property-title">Jumlah Kombinasi</div>
-            Hanya ada 8 variasi unik (rotasi dan refleksi dari satu bentuk dasar)
-          </div>
-          <div class="property-item">
-            <div class="property-title">Simetri Pusat</div>
-            $$a_{ij} + a_{2-i,2-j} = 10$$
-            Contoh: 8+2=10, 3+7=10, 4+6=10
-          </div>
-          <div class="property-item">
-            <div class="property-title">Angka Tengah</div>
-            Selalu 5 untuk persegi ajaib normal orde 3
-            $$a_{11} = \frac{n^2+1}{2} = 5$$
-          </div>
-        </div>
-        
-        <h5>⚙️ Struktur Grup</h5>
-        <p>
-          Grup simetri persegi 3×3 adalah $D_4$ (dihedral orde 8) yang terdiri dari:
-        </p>
-        <ul>
-          <li>4 rotasi: 0°, 90°, 180°, 270°</li>
-          <li>4 refleksi: horizontal, vertikal, dua diagonal</li>
-          <li>Setiap aksi $D_4$ mempertahankan sifat "keajaiban"</li>
-        </ul>
-      </div>
+<div class="highlight">
+  <p>
+    Persegi ajaib orde 3 adalah persegi ajaib terkecil non-trivial yang mungkin, 
+    terdiri dari angka 1 sampai 9 sedemikian sehingga jumlah setiap baris, kolom, 
+    dan diagonal utama sama dengan 15.
+  </p>
+</div>
+
+<h5>🎯 Rumus Umum Konstruksi (Metode Linear‑Modular)</h5>
+<p>
+  Untuk orde ganjil $n$, persegi ajaib dapat dibangun dengan rumus:
+  $$r_{ij} \equiv a \cdot i + b \cdot j + c \pmod{n}$$
+  di mana $i, j = 0,1,\dots,n-1$. Nilai $r_{ij}$ adalah residu modulo $n$ yang 
+  kemudian dipetakan ke bilangan‑bilangan $1$ sampai $n^2$ dengan aturan tertentu.
+</p>
+
+<h5>🔧 Contoh Konkret Orde 3 (Lo Shu)</h5>
+<p>
+  Untuk $n=3$, pilih koefisien $a=2$, $b=1$, $c=0$ sehingga diperoleh:
+  $$r_{ij} \equiv 2i + j \pmod{3}$$
+</p>
+
+<div class="example-grid">
+  <p><strong>Proses Konstruksi Langkah demi Langkah:</strong></p>
+  <ol>
+    <li>Hitung residu $r_{ij}$ untuk setiap sel $(i,j)$ dengan $i,j \in \{0,1,2\}$.
+      <table style="margin:10px auto; border-collapse: collapse; text-align:center;">
+        <tr><td style="padding:5px; border:1px solid #ccc;">r(0,0)=0</td><td style="padding:5px; border:1px solid #ccc;">r(0,1)=1</td><td style="padding:5px; border:1px solid #ccc;">r(0,2)=2</td></tr>
+        <tr><td style="padding:5px; border:1px solid #ccc;">r(1,0)=2</td><td style="padding:5px; border:1px solid #ccc;">r(1,1)=0</td><td style="padding:5px; border:1px solid #ccc;">r(1,2)=1</td></tr>
+        <tr><td style="padding:5px; border:1px solid #ccc;">r(2,0)=1</td><td style="padding:5px; border:1px solid #ccc;">r(2,1)=2</td><td style="padding:5px; border:1px solid #ccc;">r(2,2)=0</td></tr>
+      </table>
+    </li>
+    <li>Kelompokkan sel berdasarkan nilai residu:
+      <ul>
+        <li>$r=0$ : (0,0), (1,1), (2,2)</li>
+        <li>$r=1$ : (0,1), (1,2), (2,0)</li>
+        <li>$r=2$ : (0,2), (1,0), (2,1)</li>
+      </ul>
+    </li>
+    <li>Tentukan pemetaan dari residu ke himpunan bilangan bersisa tertentu (mod 3):
+      <ul>
+        <li>Bilangan 1‑9 jika dibagi 3 bersisa: 
+          <br>sisa 0 → {3,6,9}, &nbsp; sisa 1 → {1,4,7}, &nbsp; sisa 2 → {2,5,8}.</li>
+        <li>Agar jumlah ajaib 15 tercapai, kita pasangkan:
+          <br>$r=0$ ← sisa 2, &nbsp; $r=1$ ← sisa 1, &nbsp; $r=2$ ← sisa 0.</li>
+      </ul>
+    </li>
+    <li>Isi pusat (1,1) yang memiliki $r=0$ dengan bilangan 5 (sisa 2).</li>
+    <li>Gunakan sifat simetri pusat: setiap pasangan sel simetris terhadap pusat 
+      $(i,j)$ dan $(2-i,2-j)$ harus berjumlah 10. 
+      <br>Dengan panduan residu dan ketersediaan angka, diperoleh:
+      <ul>
+        <li>$(0,0)=8$, $(2,2)=2$ (kedua $r=0$, sisa 2, 8+2=10)</li>
+        <li>$(0,2)=6$, $(2,0)=4$ (r=2 dan r=1, sisa 0 dan sisa 1, 6+4=10)</li>
+        <li>$(1,0)=3$, $(1,2)=7$ (r=2 dan r=1, 3+7=10)</li>
+        <li>$(2,1)=9$, $(0,1)=1$ (r=2 dan r=1, 9+1=10)</li>
+      </ul>
+    </li>
+  </ol>
+  
+  <p><strong>Hasil akhir – Persegi Ajaib Lo Shu:</strong></p>
+  <table style="margin:10px auto; border-collapse: collapse; text-align:center;">
+    <tr><td style="padding:8px; border:1px solid #333;">8</td><td style="padding:8px; border:1px solid #333;">1</td><td style="padding:8px; border:1px solid #333;">6</td></tr>
+    <tr><td style="padding:8px; border:1px solid #333;">3</td><td style="padding:8px; border:1px solid #333;">5</td><td style="padding:8px; border:1px solid #333;">7</td></tr>
+    <tr><td style="padding:8px; border:1px solid #333;">4</td><td style="padding:8px; border:1px solid #333;">9</td><td style="padding:8px; border:1px solid #333;">2</td></tr>
+  </table>
+  <p><em>Setiap baris, kolom, dan diagonal utama berjumlah 15.</em></p>
+</div>
+
+<h5>📊 Verifikasi Matematis</h5>
+<div class="properties-grid">
+  <div class="property-item">
+    <div class="property-title">Jumlah Ajaib</div>
+    $$M = \frac{n(n^2+1)}{2} = \frac{3(9+1)}{2} = 15$$
+  </div>
+  <div class="property-item">
+    <div class="property-title">Jumlah Konfigurasi</div>
+    Hanya ada 8 variasi unik (rotasi dan refleksi dari bentuk dasar Lo Shu)
+  </div>
+  <div class="property-item">
+    <div class="property-title">Simetri Pusat</div>
+    $$a_{ij} + a_{2-i,2-j} = 10$$
+    Contoh: 8 + 2 = 10, 3 + 7 = 10, 4 + 6 = 10
+  </div>
+  <div class="property-item">
+    <div class="property-title">Angka Tengah</div>
+    Selalu 5 untuk persegi ajaib normal orde 3
+    $$a_{11} = \frac{n^2+1}{2} = 5$$
+  </div>
+</div>
+
+<h5>⚙️ Struktur Grup Simetri</h5>
+<p>
+  Grup simetri persegi 3×3 adalah $D_4$ (dihedral orde 8) yang terdiri dari:
+</p>
+<ul>
+  <li>4 rotasi: 0°, 90°, 180°, 270°</li>
+  <li>4 refleksi: horizontal, vertikal, dua diagonal</li>
+  <li>Setiap aksi $D_4$ mempertahankan sifat keajaiban (menghasilkan persegi ajaib lain yang ekuivalen)</li>
+</ul>
       
       <!-- Tab Orde 5 -->
       <div id="tab-order5" class="tab-content">
